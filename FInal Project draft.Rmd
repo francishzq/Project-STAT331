@@ -1,0 +1,43 @@
+---
+title: "Final Project"
+output: pdf_document
+---
+
+```{r}
+getwd() # make sure that the file is in the working directory
+
+# load the data as a data.frame
+birth <- read.csv(file = "chds_births.csv")
+
+# produce the pair plots for different combinations of  variables in the dataset
+
+par(mar = c(4, 4, 0, 0) + .1) # size of margins
+
+P1 <- pairs(~ wt + gestation + parity  + mage + mwt, 
+      labels = c("birth weight", "gestation", "previous preganancies",
+                 "mage", "mwt"), 
+      pch = 19,
+      cex = 0.05,
+      data = birth)
+
+P2 <- pairs(~ wt + gestation + parity + meth + mht + mwt,
+      labels = c("weight", "gestation", "parity", "meth", "mht", "mwt"),
+      pch = 19,
+      cex = 0.05,
+      data = birth)
+```
+
+```{r}
+# convert categoricla variables to factors
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
