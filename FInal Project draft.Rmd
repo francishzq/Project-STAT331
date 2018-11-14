@@ -30,6 +30,58 @@ P2 <- pairs(~ wt + gestation + parity + meth + mht + mwt,
 ```{r}
 # convert categoricla variables to factors
 
+# marital
+marital <- birth$marital
+maritalnames <- c("married", "legally separated", "divorced", "widowed",
+                  "never married") # new values
+# encode the factor
+marital2 <- rep(NA, length(marital))
+for (ii in 1:5) {
+  marital2[marital == ii] <- maritalnames[ii]
+}
+marital2 <- factor(marital2, levels = maritalnames)
+birth$marital <- marital2
+######################################################################
+# income
+income <- birth$income
+incomenames <- c("under 2500", "2500-4999", "5000-7499", "7500-9999",
+                  "10000-12499", "12500-14999", "15000-17499",
+                 "17500-19999", "20000-22499", "over 22500") # new values
+# encode the factor
+income2 <- incomenames[income+1]
+income2 <- factor(income2, levels = incomenames)
+birth$income <- income2
+############################################################
+# smoke
+smoke <- birth$smoke
+smokenames <- c("never", "smokes now", "until pregnancy", 
+                "used to, not anymore") # new values
+# encode the factor
+smoke2 <- smokenames[smoke+1]
+smoke2 <- factor(smoke2, levels = smokenames)
+birth$smoke <- smoke2
+############################################################
+# time
+time <- birth$time
+timenames <- c("never smoked", "still smokes", "during pregnancy", 
+                "less than a year", "1-2 years", "2-3 years", "3-4 years",
+               "5-9 years", "more than 10 years", 
+               "quit but don't know when") # new values
+# encode the factor
+time2 <- timenames[time+1]
+time2 <- factor(time2, levels = timenames)
+birth$time <- time2
+#############################################################
+# number
+number <- birth$number
+numbernames <- c("never smoked", "1-4", "5-9", "10-14", "15-19", "20-29", "30-39",
+                 "40-60", "more than 60", 
+                 "smoked but don't know how much") # new values
+# encode the factor
+number2 <- numbernames[number+1]
+number2 <- factor(number2, levels = numbernames)
+birth$number <- number2
+
 ```
 
 ## Including Plots
