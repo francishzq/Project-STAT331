@@ -156,6 +156,28 @@ birth$number <- number2
 
 ```
 
+```{r}
+# check how many observations contain too many NA's
+n <- length(birth$wt) # number of total observations
+boundary <- .10 * n # boundary to decide if there are too many NA's
+
+NA.list <- NA # initialize the list of required covariates
+
+# identify and display all required covariates
+for (ii in 1:length(birth)) {
+ if(sum(is.na(birth[ii])) >= boundary)
+ {NA.list <- c(NA.list, colnames(birth)[ii])}
+}
+NA.list <- NA.list[2:length(NA.list)]
+NA.list
+```
+
+
+
+
+
+
+
 ## Including Plots
 
 You can also embed plots, for example:
