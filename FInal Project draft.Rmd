@@ -28,7 +28,79 @@ P2 <- pairs(~ wt + gestation + parity + meth + mht + mwt,
 ```
 
 ```{r}
-# convert categoricla variables to factors
+# convert categorical variables to factors
+
+# convert meth to non-numeric categorical variable
+meth2 <- birth$meth
+
+# "levels" of variable meth
+methnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+
+# assign "Caucasian" level to values less than or equal to 5
+# otherwise assign levels based on order in methnames vector
+for(ii in 0:10) {
+  if(ii<=5){
+    meth2[meth2 == ii] <- "Caucasian"
+  } else {
+    meth2[meth2 == ii] <- methnames[ii-4]
+  }
+}
+
+meth2 <- factor(meth2, levels = methnames) # order levels based on methnames
+levels(meth2)
+birth$meth <- meth2 # replace in dataset
+
+############################################
+
+# convert med to categorical variables
+med2 <- birth$med
+
+# "levels" of variable med
+mednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+
+med2 <- mednames[birth$med+1]
+
+med2 <- factor(med2, levels = mednames) # order levels based on mednames
+levels(med2)
+birth$med <- med2 # replace in dataset
+
+##########################################
+
+# convert feth to categorical variables
+feth2 <- birth$feth
+
+# "levels" of variable feth
+fethnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+
+# assign "Caucasian" level to values less than or equal to 5
+# otherwise assign levels based on order in fethnames vector
+for(ii in 0:10) {
+  if(ii<=5){
+    feth2[feth2 == ii] <- "Caucasian"
+  } else {
+    feth2[feth2 == ii] <- fethnames[ii-4]
+  }
+}
+
+feth2 <- factor(feth2, levels = fethnames) # order levels based on methnames
+levels(feth2)
+birth$feth <- feth2 # replace in dataset
+
+############################################
+
+# convert fed to categorical variables
+fed2 <- birth$fed
+
+# "levels" of variable fed
+fednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+
+fed2 <- fednames[birth$fed+1]
+
+fed2 <- factor(fed2, levels = fednames) # order levels based on fednames
+levels(fed2)
+birth$fed <- fed2 # replace in dataset
+
+######################################################################
 
 # marital
 marital <- birth$marital
