@@ -1,2 +1,2 @@
-# stat331project
-Stat 331 Final Project
+# statproject
+Stat Final Project
