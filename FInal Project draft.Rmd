@@ -14,7 +14,7 @@ birth <- read.csv(file = "chds_births.csv")
 par(mar = c(4, 4, 0, 0) + .1) # size of margins
 
 P1 <- pairs(~ wt + gestation + parity  + mage + mwt, 
-      labels = c("birth weight", "gestation", "previous preganancies",
+      labels = c("birth weight", "gestation", "parity",
                  "mage", "mwt"), 
       pch = 19,
       cex = 0.05,
