@@ -175,9 +175,6 @@ NA.list
 
 
 
-
-
-
 ## Including Plots
 
 You can also embed plots, for example:
