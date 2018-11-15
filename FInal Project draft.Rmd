@@ -1,6 +1,7 @@
 ---
 title: "Final Project"
 output: pdf_document
+fontsize: 12pt
 ---
 
 ```{r}
