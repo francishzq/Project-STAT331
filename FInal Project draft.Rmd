@@ -218,6 +218,37 @@ total_NA_rows
 ```
 
 
+```{r}
+# Combine smoke and time into a single variable smoke:
+newnames <- c("Never Smoked", "Still Smokes","Smoked but quit during pregnancy", "Smoked but quit before pregnancy") # create categories for new variables
+
+# load the original data
+newbirth <- read.csv(file = "chds_births.csv")
+
+# extract the corresponding columns
+smoke <- newbirth$smoke
+
+n <- length(smoke) # number of observations
+newsmoke <- rep(NA, n)
+
+for (ii in 1:n) {
+  if (is.na(smoke[ii])) {
+    newsmoke[ii] <- "NA"
+  }
+  else {
+    for (jj in 0:3) {
+      if (smoke[ii] == jj) {
+        newsmoke[ii] <- newnames[jj+1]
+      }
+    }
+  }
+}
+
+# assign the new variable to the dataset
+birth$smoke <- newsmoke
+```
+
+
 ## Including Plots
 
 You can also embed plots, for example:
