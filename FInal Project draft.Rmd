@@ -182,7 +182,7 @@ NA.list <- NA.list[2:length(NA.list)]
 NA.list
 ```
 
-**Conclusion**: From our analysis, fht, fwt and income contain "too many" NA's. It implies that if we include any of these three factors into our models, then it is probable that our models will be biased because there are too many unavailable data and we do not know why they are unavailable; as a result, any model including any of these three factors will not be representative of the **entire population**. Therefore, based on the given dataset, it is reasonable not to consider these three factors. **TBC**
+**Conclusion**: From our analysis, the father's height (fht), the father's weight (fwt) and the family yearly income (income) contain "too many" NA's. It implies that if we include any of these three factors into our models, then it is probable that our models will be biased because there are too many unavailable data and we do not know why they are unavailable; as a result, any model including any of these three factors will not be representative of the **entire population**. Therefore, based on the given dataset, it is reasonable not to consider these three factors. **TBC**
 
 ```{r}
 # throw out fht, fwt and income
