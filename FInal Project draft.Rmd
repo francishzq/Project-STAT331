@@ -154,15 +154,27 @@ time2 <- timenames[time+1]
 time2 <- factor(time2, levels = timenames)
 birth$time <- time2
 #############################################################
-# number
-number <- birth$number
-numbernames <- c("never smoked", "1-4", "5-9", "10-14", "15-19", "20-29", "30-39",
-                 "40-60", "more than 60", 
-                 "smoked but don't know how much") # new values
-# encode the factor
-number2 <- numbernames[number+1]
-number2 <- factor(number2, levels = numbernames)
-birth$number <- number2
+# number (we create new descriptive groupings for number of cigarettes smoked per day)
+num2 <- birth$number
+# new categories for variable number
+numnames<- c("never smoked", "up to half a pack", "half to full pack", "more than one pack")
+
+for(ii in 0:9) {
+  if(ii==0){
+    num2[num2 == ii] <- numnames[1]
+  } 
+  if(ii <= 2) {
+    num2[num2 == ii] <- numnames[2]
+  } 
+  if(ii <= 4) {
+    num2[num2 == ii] <- numnames[3]
+  } else {
+    num2[num2 == ii] <- numnames[4]
+  }
+}
+num2 <- factor(num2, levels = numnames) # order levels based on numnames
+levels(num2)
+birth$number <- num2 # replace in dataset
 
 ```
 
