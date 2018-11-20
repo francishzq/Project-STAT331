@@ -248,6 +248,28 @@ for (ii in 1:n) {
 birth$smoke <- newsmoke
 ```
 
+```{r}
+# A random test model
+Msmoke <- lm(wt ~ smoke*number, data = birth)
+summary(Msmoke)
+
+# We detected that there are NA's in some variables, so we decided to do look at the corresponding observations
+```
+
+```{r}
+# compare linear and quadratic in gestation
+
+# compare interaction effect between smoke and number
+M1 <- lm(wt ~ I(gestation^2) + meth + feth + smoke*number, data = birth)
+M2 <- lm(wt ~ I(gestation^2) + meth + feth + smoke + number, data = birth)
+anova(M2, M1)
+```
+
+
+
+
+
+
 
 ## Including Plots
 
