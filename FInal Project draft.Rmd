@@ -248,6 +248,39 @@ for (ii in 1:n) {
 birth$smoke <- newsmoke
 ```
 
+# Modify the variables smoke and number so that we can obtain all coefficients' values
+# locate the observations that have NA's in smoke
+ind_smoke <- NA
+for (ii in 1:length(birth$smoke)) {
+  if (is.na(birth$smoke[ii])) {
+    ind_smoke <- c(ind_smoke, ii)
+  }
+}
+ind_smoke <- ind_smoke[2:length(ind_smoke)]
+
+# locate the observations that have NA's in number
+ind_number <- NA
+for (ii in 1:length(birth$number)) {
+  if (is.na(birth$number[ii])) {
+    ind_number <- c(ind_number, ii)
+  }
+}
+ind_number <- ind_number[2:length(ind_number)]
+
+# Combine mht and mwt to create a new variable BMI
+# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
+# Convert mht and mwt to standard metric
+lbstokg <- 0.453592
+birth$mwt <- lbstokg * birth$mwt
+inchtometer <- 0.0254
+birth$mht <- inchtometer * birth$mht
+
+# Create BMI variable
+mht <- birth$mht
+mwt <- birth$mwt
+BMI <- mwt / mht^2
+birth$BMI <- BMI
+
 ```{r}
 # A random test model
 Msmoke <- lm(wt ~ smoke*number, data = birth)
