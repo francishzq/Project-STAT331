@@ -1,0 +1,328 @@
+
+
+getwd() # make sure that the file is in the working directory
+
+# load the data as a data.frame
+birth <- read.csv(file = "chds_births.csv")
+
+# summary of data
+summary(birth)
+
+
+
+
+#**************************************************************
+# convert categorical variables to factors
+
+# convert meth to non-numeric categorical variable
+meth2 <- birth$meth
+# "levels" of variable meth
+methnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+# assign "Caucasian" level to values less than or equal to 5
+# otherwise assign levels based on order in methnames vector
+for(ii in 0:10) {
+  if(ii<=5){
+    meth2[meth2 == ii] <- "Caucasian"
+  } else {
+    meth2[meth2 == ii] <- methnames[ii-4]
+  }
+}
+meth2 <- factor(meth2, levels = methnames) # order levels based on methnames
+levels(meth2)
+birth$meth <- meth2 # replace in dataset
+############################################
+# convert med to categorical variables
+med2 <- birth$med
+# "levels" of variable med
+mednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+med2 <- mednames[birth$med+1]
+med2 <- factor(med2, levels = mednames) # order levels based on mednames
+levels(med2)
+birth$med <- med2 # replace in dataset
+##########################################
+# convert feth to categorical variables
+feth2 <- birth$feth
+# "levels" of variable feth
+fethnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+# assign "Caucasian" level to values less than or equal to 5
+# otherwise assign levels based on order in fethnames vector
+for(ii in 0:10) {
+  if(ii<=5){
+    feth2[feth2 == ii] <- "Caucasian"
+  } else {
+    feth2[feth2 == ii] <- fethnames[ii-4]
+  }
+}
+feth2 <- factor(feth2, levels = fethnames) # order levels based on methnames
+levels(feth2)
+birth$feth <- feth2 # replace in dataset
+############################################
+# convert fed to categorical variables
+fed2 <- birth$fed
+# "levels" of variable fed
+fednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+fed2 <- fednames[birth$fed+1]
+fed2 <- factor(fed2, levels = fednames) # order levels based on fednames
+levels(fed2)
+birth$fed <- fed2 # replace in dataset
+
+################################################################################
+# marital
+marital <- birth$marital
+maritalnames <- c("married", "legally separated", "divorced", "widowed",
+                  "never married") # new values
+# encode the factor
+marital2 <- rep(NA, length(marital))
+for (ii in 1:5) {
+  marital2[marital == ii] <- maritalnames[ii]
+}
+marital2 <- factor(marital2, levels = maritalnames)
+birth$marital <- marital2
+######################################################################
+# income
+income <- birth$income
+incomenames <- c("under 2500", "2500-4999", "5000-7499", "7500-9999",
+                 "10000-12499", "12500-14999", "15000-17499",
+                 "17500-19999", "20000-22499", "over 22500") # new values
+# encode the factor
+income2 <- incomenames[income+1]
+income2 <- factor(income2, levels = incomenames)
+birth$income <- income2
+############################################################
+# smoke
+smoke <- birth$smoke
+smokenames <- c("never", "smokes now", "until pregnancy", 
+                "used to, not anymore") # new values
+# encode the factor
+smoke2 <- smokenames[smoke+1]
+smoke2 <- factor(smoke2, levels = smokenames)
+birth$smoke <- smoke2
+############################################################
+# time
+time <- birth$time
+timenames <- c("never smoked", "still smokes", "during pregnancy", 
+               "less than a year", "1-2 years", "2-3 years", "3-4 years",
+               "5-9 years", "more than 10 years", 
+               "quit but don't know when") # new values
+# encode the factor
+time2 <- timenames[time+1]
+time2 <- factor(time2, levels = timenames)
+birth$time <- time2
+#############################################################
+# number
+number <- birth$number
+numbernames <- c("never smoked", "1-4", "5-9", "10-14", "15-19", "20-29", "30-39",
+                 "40-60", "more than 60", 
+                 "smoked but don't know how much") # new values
+# encode the factor
+number2 <- numbernames[number+1]
+number2 <- factor(number2, levels = numbernames)
+birth$number <- number2
+
+
+
+# **Conclusion**: From our analysis, the father's height (fht), the father's weight (fwt) and the family yearly income (income) contain "too many" NA's. It implies that if we include any of these three factors into our models, then it is probable that our models will be biased because there are too many unavailable data and we do not know why they are unavailable; as a result, any model including any of these three factors will not be representative of the **entire population**. Therefore, based on the given dataset, it is reasonable not to consider these three factors. **TBC**
+#********************************************************************************
+
+# throw out fht and fwt
+birth$fht <- NULL
+birth$fwt <- NULL
+birth$income <- NULL # will come back later
+
+
+
+
+# Check how many observations contain NA's
+n <- length(birth$wt) # number of rows
+count <- 0 # initialize count of rows with at least one NA
+for (ii in 1:n) {
+  if(sum(is.na(birth[ii,])) >= 1) {
+    count = count + 1
+  }
+}
+total_NA_rows <- count
+total_NA_rows
+
+
+
+# number (we create new descriptive groupings for number of cigarettes smoked per day)
+# load the original dataset
+newbirth <- read.csv("chds_births.csv")
+
+num2 <- newbirth$number
+# new categories for variable number
+numnames <- c("never smoked", "up to half a pack", "half to full pack", "more than one pack")
+for(ii in 0:9) {
+  if(ii==0) {
+    num2[num2 == ii] <- numnames[1]
+  } 
+  if(0 < ii & ii <= 2) {
+    num2[num2 == ii] <- numnames[2]
+  } 
+  if(2 < ii & ii <= 4) {
+    num2[num2 == ii] <- numnames[3]
+  } else {
+    num2[num2 == ii] <- numnames[4]
+  }
+}
+
+num2 <- factor(num2, levels = numnames) # order levels based on numnames
+birth$number <- num2 # replace in dataset
+
+# Combine smoke and time into a single variable smoke:
+newnames <- c("Never Smoked", "Still Smokes","Smoked but quit during pregnancy", "Smoked but quit before pregnancy") # create categories for new variables
+
+# load the original dataset
+newbirth <- read.csv(file = "chds_births.csv")
+
+# extract the corresponding columns
+smoke <- newbirth$smoke
+
+n <- length(smoke) # number of observations
+newsmoke <- rep(NA, n)
+
+for (ii in 1:n) {
+  if (is.na(smoke[ii])) {
+    newsmoke[ii] <- NA
+  }
+  else {
+    for (jj in 0:3) {
+      if (smoke[ii] == jj) {
+        newsmoke[ii] <- newnames[jj+1]
+      }
+    }
+  }
+}
+
+# assign the new variable to the dataset
+birth$smoke <- factor(newsmoke)
+
+# throw out the variable time
+birth$time <- NULL
+
+# Modify the variables smoke and number so that we can obtain all coefficients' values
+
+# locate the observations that have NA's in smoke
+ind_smoke <- NA
+for (ii in 1:length(birth$smoke)) {
+  if (is.na(birth$smoke[ii])) {
+    ind_smoke <- c(ind_smoke, ii)
+  }
+}
+ind_smoke <- ind_smoke[2:length(ind_smoke)]
+
+# locate the observations that have NA's in number
+ind_number <- NA
+for (ii in 1:length(birth$number)) {
+  if (is.na(birth$number[ii])) {
+    ind_number <- c(ind_number, ii)
+  }
+}
+ind_number <- ind_number[2:length(ind_number)]
+
+# 
+
+# Combine mht and mwt to create a new variable BMI
+# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
+# Convert mht and mwt to standard metric
+lbs_to_kg <- 0.453592
+birth$mwt <- lbs_to_kg * birth$mwt
+inch_to_meter <- 0.0254
+birth$mht <- inch_to_meter * birth$mht
+
+# Create BMI variable
+mht <- birth$mht
+mwt <- birth$mwt
+BMI <- mwt / mht^2
+birth$BMI <- BMI
+
+# throw out mht and mwt
+birth$mht <- NULL
+birth$mwt <- NULL
+
+
+
+# Nov 26th
+
+# (pre-diagnostics) 
+summary(birth) # summary of data
+# Discuss NA's -> Methods to deal with them 
+# factor of categorical variables
+# regrouping of some variables (smoke & time, numbers, BMI)
+# deal with the NA's in smoke and number
+
+# Pair plots of weights and other continuous variables
+pairs(~ wt + gestation + parity + mage + BMI + fage, 
+      pch = 19,
+      cex = 0.05,
+      data = birth)
+
+# Throw out the observations that have NA's in smoke and number
+# note that observations that have NA's in smoke also have NA's in number
+remove_smoke <- ind_number
+birth <- birth[-remove_smoke,]
+
+# Automated model selection
+
+# Minimal model
+M0 <- lm(wt ~ 1, data = birth)
+summary(M0)
+
+# Maximal model
+Mmax <- lm(wt ~ (.)^2, data = birth)
+summary(Mmax)
+
+# find model coefficients that are NA's 
+beta.max <- coef(Mmax)
+names(beta.max)[is.na(beta.max)]
+
+# New maximal model
+Mmax1 <- lm(wt ~ (.-meth - med - fed - marital - fage - feth)^2, data = birth)
+summary(M1new)
+
+# Forward selection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
