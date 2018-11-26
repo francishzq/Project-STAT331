@@ -125,9 +125,7 @@ birth$number <- number2
 #********************************************************************************
 
 # throw out fht and fwt
-birth$fht <- NULL
-birth$fwt <- NULL
-birth$income <- NULL # will come back later
+birth <- birth[,-c(12, 13, 15)]
 
 
 
@@ -198,7 +196,24 @@ for (ii in 1:n) {
 birth$smoke <- factor(newsmoke)
 
 # throw out the variable time
-birth$time <- NULL
+birth <- birth[,-14]
+
+# Combine mht and mwt to create a new variable BMI
+# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
+# Convert mht and mwt to standard metric
+lbs_to_kg <- 0.453592
+birth$mwt <- lbs_to_kg * birth$mwt
+inch_to_meter <- 0.0254
+birth$mht <- inch_to_meter * birth$mht
+
+# Create BMI variable
+mht <- birth$mht
+mwt <- birth$mwt
+BMI <- mwt / mht^2
+birth$BMI <- BMI
+
+# throw out mht and mwt
+birth <- birth[,-c(7, 8)]
 
 # Modify the variables smoke and number so that we can obtain all coefficients' values
 
@@ -220,25 +235,7 @@ for (ii in 1:length(birth$number)) {
 }
 ind_number <- ind_number[2:length(ind_number)]
 
-# 
 
-# Combine mht and mwt to create a new variable BMI
-# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
-# Convert mht and mwt to standard metric
-lbs_to_kg <- 0.453592
-birth$mwt <- lbs_to_kg * birth$mwt
-inch_to_meter <- 0.0254
-birth$mht <- inch_to_meter * birth$mht
-
-# Create BMI variable
-mht <- birth$mht
-mwt <- birth$mwt
-BMI <- mwt / mht^2
-birth$BMI <- BMI
-
-# throw out mht and mwt
-birth$mht <- NULL
-birth$mwt <- NULL
 
 
 
@@ -276,16 +273,38 @@ summary(Mmax)
 beta.max <- coef(Mmax)
 names(beta.max)[is.na(beta.max)]
 
-# New maximal model
-Mmax1 <- lm(wt ~ (.-meth - med - fed - marital - fage - feth)^2, data = birth)
-summary(M1new)
+# new maximal model
+Mmaxnew <- lm(wt ~ (.- fed - med - meth - feth)^2 + meth + feth + 
+                gestation:feth + gestation:meth
+              + parity:meth + parity:feth 
+              + BMI:meth + I(gestation^2), data = birth)
+
+beta.maxnew <- coef(Mmaxnew)
+names(beta.maxnew)[is.na(beta.maxnew)]
+
 
 # Forward selection
+system.time({ # time the calculation
+  Mfwd <- step(object = M0, # starting point model
+               scope = list(lower = M0, upper = Mmax1), # smallest and largest model
+               direction = "forward",
+               trace = FALSE) # trace prints out information
+})
 
+# Backward elimination
+system.time({
+  Mback <- step(object = Mmax, # starting point model
+                scope = list(lower = M0, upper = Mmax1),
+                direction = "backward", trace = FALSE)
+})
 
-
-
-
+# Stepwise selection
+Mstart <- lm(wt ~ ., data = birth)
+system.time({
+  Mstep <- step(object = Mstart,
+                scope = list(lower = M0, upper = Mmax1),
+                direction = "both", trace = FALSE)
+})
 
 
 
