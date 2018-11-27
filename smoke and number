@@ -1,0 +1,98 @@
+birth <- read.csv(file = "chds_births.csv")
+
+n <- length(smoke) # number of observations
+newsmoke <- rep(NA, n)
+
+for (ii in 1:n) {
+  if (is.na(smoke[ii])) {
+    newsmoke[ii] <- NA
+  }
+  else {
+    for (jj in 0:3) {
+      if (smoke[ii] == jj) {
+        newsmoke[ii] <- newnames[jj+1]
+      }
+    }
+  }
+}
+birth$smoke <- newsmoke
+
+num2 <- newbirth$number
+# new categories for variable number
+numnames <- c("never smoked", "up to half a pack", "half to full pack", "more than one pack")
+for(ii in 0:9) {
+  if(ii==0) {
+    num2[num2 == ii] <- numnames[1]
+  } 
+  if(0 < ii & ii <= 2) {
+    num2[num2 == ii] <- numnames[2]
+  } 
+  if(2 < ii & ii <= 4) {
+    num2[num2 == ii] <- numnames[3]
+  } else {
+    num2[num2 == ii] <- numnames[4]
+  }
+}
+birth$number <- num2
+
+# locate the observations that have NA's in smoke
+ind_smoke <- NA
+for (ii in 1:length(birth$smoke)) {
+  if (is.na(birth$smoke[ii])) {
+    ind_smoke <- c(ind_smoke, ii)
+  }
+}
+ind_smoke <- ind_smoke[2:length(ind_smoke)]
+
+# locate the observations that have NA's in number
+ind_number <- NA
+for (ii in 1:length(birth$number)) {
+  if (is.na(birth$number[ii])) {
+    ind_number <- c(ind_number, ii)
+  }
+}
+ind_number <- ind_number[2:length(ind_number)]
+
+# Throw out the observations that have NA's in smoke and number
+# note that observations that have NA's in smoke also have NA's in number
+remove_smoke <- ind_number
+birth <- birth[-remove_smoke,]
+
+
+
+# Combine smoke and number
+smoke_number <- birth$smoke
+for (ii in 1:(length(birth$smoke))) {
+  if (smoke_number[ii] != "never smoked") {
+     if (birth$number[ii] == "up to half a pack") {
+    if (smoke_number[ii] == "Smoked but quit before pregnancy") {
+      smoke_number[ii] <- "Smoked up to half a pack but quit before pregnancy"
+    }
+    else {if (smoke_number[ii] == "Smoke but quit during pregnancy") {
+      smoke_number[ii] <- "Smoked up to half a pack but quit during pregnancy"
+    }
+    else {smoke_number[ii] <- "Still smokes up to half a pack"}}
+  }
+  if (birth$number[ii] == "half to full pack") {
+    if (smoke_number[ii] == "Smoked but quit before pregnancy") {
+      smoke_number[ii] <- "Smoked half to full pack but quit before pregnancy"
+    }
+    else {if (smoke_number[ii] == "Smoked but quit during pregnancy") {
+      smoke_number[ii] <- "Smoked half to full pack but quit during pregnancy"
+    }
+    else {smoke_number[ii] <- "Still smokes half to full pack"}}
+  }
+  else {
+      if (smoke_number[ii] == "Smoked but quit before pregnancy") {
+        smoke_number[ii] <- "Smoked more than one pack but quit before pregnancy"
+      }
+      else {if (smoke_number[ii] == "Smoked but quit during pregnancy") {
+        smoke_number[ii] <- "Smoked more than one pack but quit during pregnancy"
+      }
+      else {smoke_number[ii] <- "Still smokes more than one pack"}}
+    }
+  }
+}
+
+birth$smoke_number <- smoke_number
+head(birth$smoke_number)
