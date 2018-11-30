@@ -1,3 +1,5 @@
+
+
 getwd() # make sure that the file is in the working directory
 
 # load the data as a data.frame
@@ -91,19 +93,19 @@ for (ii in 1:(length(birth$smoke))) {
     }
     else if (birth$number[ii] == "half to full pack") {
       if (smoke_number[ii] == "Smoked but quit before pregnancy") {
-        smoke_number[ii] <- "Smoked half to full pack but quit before pregnancy"
+        smoke_number[ii] <- "Smoked more than half a pack but quit before pregnancy"
       }
       else if (smoke_number[ii] == "Smoked but quit during pregnancy") {
-        smoke_number[ii] <- "Smoked half to full pack but quit during pregnancy"
+        smoke_number[ii] <- "Smoked more than half a pack but quit during pregnancy"
       }
       else {smoke_number[ii] <- "Still smokes half to full pack"}
     }
     else {
       if (smoke_number[ii] == "Smoked but quit before pregnancy") {
-        smoke_number[ii] <- "Smoked more than one pack but quit before pregnancy"
+        smoke_number[ii] <- "Smoked more than half a pack but quit before pregnancy"
       }
       else if (smoke_number[ii] == "Smoked but quit during pregnancy") {
-        smoke_number[ii] <- "Smoked more than one pack but quit during pregnancy"
+        smoke_number[ii] <- "Smoked more than half a pack but quit during pregnancy"
       }
       else {smoke_number[ii] <- "Still smokes more than one pack"}
     }
@@ -116,8 +118,23 @@ head(birth$smoke_number)
 
 summary(birth)
 
+# Combine other and mixed in feth and call it other
+for (ii in 1:length(birth$feth)) {
+  if (!is.na(birth$feth[ii])) {
+    if(birth$feth[ii] == 10) {
+      birth$feth[ii] <- 9
+  }
+  }
+}
 
-
+# Combine other and mixed in meth and call it other
+for (ii in 1:length(birth$meth)) {
+  if (!is.na(birth$meth[ii])) {
+    if(birth$meth[ii] == 10) {
+      birth$meth[ii] <- 9
+    }
+  }
+}
 
 
 #**************************************************************
@@ -127,10 +144,10 @@ summary(birth)
 meth2 <- birth$meth
 length(meth2)
 # "levels" of variable meth
-methnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+methnames <- c("Caucasian","Mexican", "African-American","Asian", "Other")
 # assign "Caucasian" level to values less than or equal to 5
 # otherwise assign levels based on order in methnames vector
-for(ii in 0:10) {
+for(ii in 0:9) {
   if(ii<=5){
     meth2[meth2 == ii] <- "Caucasian"
   } else {
@@ -153,10 +170,10 @@ birth$med <- med2 # replace in dataset
 # convert feth to categorical variables
 feth2 <- birth$feth
 # "levels" of variable feth
-fethnames <- c("Caucasian","Mexican", "African-American","Asian", "Mixed", "Other")
+fethnames <- c("Caucasian","Mexican", "African-American","Asian", "Other")
 # assign "Caucasian" level to values less than or equal to 5
 # otherwise assign levels based on order in fethnames vector
-for(ii in 0:10) {
+for(ii in 0:9) {
   if(ii<=5){
     feth2[feth2 == ii] <- "Caucasian"
   } else {
@@ -329,7 +346,7 @@ for (ii in 1:length(birth$BMI)) {
 }
 ind_BMI <- ind_BMI[2:length(ind_BMI)]
 
-missing <- c(ind_gestation, ind_mage, ind_BMI, ind_marital,
+missing <- c(ind_gestation, ind_mage, ind_BMI, ind_smoke_number, ind_marital,
              ind_fage, ind_fed, ind_med)
 missing
 
@@ -345,6 +362,7 @@ for (ii in 1:m) {
 }
 new_missing <- new_missing[2:length(new_missing)]
 new_missing
+
 
 # remove observations containing NA's
 birth <- birth[-new_missing,]
@@ -426,7 +444,7 @@ system.time({
 
 # Numerical Analysis
 # models to compare
-M1 <- Mfwd
+M1 <- Mback
 M2 <- Mstep
 Mnames <- expression(M[FWD], M[STEP])
 # Cross-validation setup
@@ -443,16 +461,12 @@ system.time({
     # randomly select training observations
     train.ind <- sample(ntot, ntrain) # training observations
     # refit the models on the subset of training data; ?update for details!
-    M1$xlevels$smoke_number <- union(M1$xlevels$smoke_number, 
-                                     levels(birth[-train.ind,]$smoke_number))
-    
     M1.cv <- update(M1, subset = train.ind)
     
-    M2$xlevels$smoke_number <- union(M2$xlevels$smoke_number, 
-                                     levels(birth[-train.ind,]$smoke_number))
     M2.cv <- update(M2, subset = train.ind)
     
     
+   
     # out-of-sample residuals for both models
     # that is, testing data - predictions with training parameters
     M1.res <- birth$weight[-train.ind] -
@@ -471,3 +485,37 @@ system.time({
       sum(dnorm(M2.res, mean = 0, sd = M2.sigma, log = TRUE))
   }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
