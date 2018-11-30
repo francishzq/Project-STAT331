@@ -265,6 +265,26 @@ birth <- birth[,-c(7, 8)]
 birth <- birth[, -c(11, 12)]
 # Modify the variables smoke and number so that we can obtain all coefficients' values
 
+# Want to count how many rows have meth=feth
+birth2 <- read.csv(file = "chds_births.csv")
+
+count.eth <- 0
+for (ii in 1:length(birth2$meth)) {
+  if ((is.na(birth2$feth[ii])==FALSE) & is.na(birth2$meth[ii])==FALSE){
+    if (birth2$meth[ii]<=5) {
+      if (birth2$feth[ii]<=5){
+        count.eth <- count.eth+1
+      }
+    }
+    else {
+      if (birth2$meth[ii]==birth2$feth[ii]){
+        count.eth <- count.eth+1
+      }
+    }
+  }
+}
+count.eth
+
 # we assume fathers and mothers have the same ethnicity background
 # based on the majority of the dataset
 # deal with the NA's in meth (justification)
