@@ -505,6 +505,13 @@ system.time({
 })
 
 
+
+
+
+
+
+
+
 # Different residual plots
 # plot setup
 cex <- .8
@@ -576,7 +583,7 @@ points(predict(M1), dfts1, pch = 21, bg = "orange", cex = cex)
 # against leverages
 plot(h1, rep(0, length(predict(M1))), type = "n", cex.axis = cex,
      ylim = range(stan.res1, press1, dfts1),
-     xlab = "Leverages", ylab = "Residuals")
+     xlab = "M1 Leverages", ylab = "M1 Residuals")
 segments(x0 = h1,
          y0 = pmin(stan.res1, press1, dfts1),
          y1 = pmax(stan.res1, press1, dfts1),
