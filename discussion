@@ -1,0 +1,21 @@
+# Discussion
+
+## Results
+
+### Significant Factors:
+The most significant factors influencing birth weight of healthy single fetus males in this CHDS sample are: the length of the gestation period, the total number of previous pregnancies, the father's ethnicity, the mother's age, the mother's height and weight, whether the mother smoked during pregnancy and the number of cigarettes smoked per day by the mother when she was smoking.
+
+### Coefficients with High p-values:
+There are some coefficients with *high p-values* retained in our model, such as fethMexican, fethOther and Smoked up to half a pack but quit before pregnancy. 
+
+For the coefficients related to ethnicities (fethMexican and fethOther), note that the majority observations in the given dataset have ethnicity *Caucasian*, thus, other ethnicities only account for a small portion of the entire dataset. So, even if in reality these coefficients are significant to the birth weight of a single-fetus male, they might not be revealed by this given dataset. Hence, we decided to retain them in our model. 
+
+For the coefficient about smoking (Smoked up to half a pack but quit *before pregnancy*), note that all the other coefficients about smoking are shown to be significant in our model, and they are all about *smoking during pregnancy*. We decided to retain the coefficient Smoked up to half a pack but quit before pregnancy in our model so that it shows a *contrast* with other coefficients about smoking, and it would be more obvious to see that *smoking during pregnancy* has a really significant influence on the birth weight of a single-fetus male. 
+
+## Recommendation
+Based on our result, it is shown that, compared to the birth weight of a single-fetus male whose mother never smoked, the expected birth weight of a single-fetus male whose mother smoked but quit during pregnancy or smoked throughout pregnancy is less. Thus, we recommend that mothers should refrain from smoking during pregnancy and maintain a normal or higher than normal BMI (i.e. BMI above 18.5) to reduce the likelihood of low birth weight if they are expecting to give birth to a healthy single-fetus male.
+
+## Deficiency
+At the beginning, we threw out three columns containing too many NA's; next, we threw out close to 10% of the entire observations which contain NA's in any columns. After this, we imputed missing mother's ethnicity (meth) and father's ethnicity (feth) by matching misssing ethnicity in one parent with the one of the other parent. Every step above was well justified, but there is still possibility that our model could be biased. 
+
+Another deficiency worth mentioning is that our model is based on this given dataset which dates back to 1960s, and "an algorithm is only as good as its inputs". Even though our model reveals all significant factors, when given another dataset obtained in the 21st century, we might be able to obtain a different model with more or less significant factors. 
