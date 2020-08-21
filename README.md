@@ -9,5 +9,6 @@ Instructor: Professor [Martin Lysy](https://uwaterloo.ca/statistics-and-actuaria
 
 This project is aimed at exploring the relationship between healthy male single-fetus birth weight and some explanatory variables based on a given dataset containing information about 1236 healthy male single-fetus births of women enrolled in the Kaiser Foundation Health Plan in the San Francisco/East Bay area between 1960-1967. The entire statistical analysis was performed in the following steps: data cleaning, imputation, pre-fitting data diagnostics, automated model selection, model diagnostics of two candidate models and discussion of the results of the chosen model. 
 
-The file named `Final-Project.pdf` is the final draft of the project; however, readers can download the Rmarkdown file `Final-Project.Rmd` (along with the dataset `chds_births.csv`) and compile it to get the `.pdf` file. The file `R code. R` contains all R codes used for this project and can also be found in the Appendix of the project. 
+The file named `Final-Project.pdf` is the final draft of the project; however, readers can download the Rmarkdown file `Final-Project.Rmd` (along with the dataset `chds_births.csv`) and compile it to get the `.pdf` file. The file `R code` contains all R codes used for this project and can also be found in the Appendix of the project. 
 
+We tried our best to apply the knowledge and use the technique that we had learned from the course; however, there 
