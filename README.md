@@ -1,5 +1,5 @@
 # STAT 331 (Applied Linear Models) Final Project 
-Collaborators: Francis Han; Catherine Wang \
+Collaborators: Francis Z. Han; Catherine Wang \
 School: University of Waterloo \
 Term: Fall 2018 \
 Course Description: [STAT 331](http://www.ucalendar.uwaterloo.ca/2021/COURSE/course-STAT.html#STAT331) \
