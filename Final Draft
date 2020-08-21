@@ -1,7 +1,7 @@
 ---
-title: "STAT 331 Project"
-author: "Francis Han; Catherine Wang"
-date: "`r format(Sys.Date(), format = '%B %d, %Y')`"
+title: "STAT 331 Final Project"
+author: "Francis Z. Han; Catherine Wang"
+date: "03/12/2018"
 fontsize: 12pt
 output: 
    pdf_document:
@@ -9,33 +9,32 @@ output:
 ---
 
 
-
 # Summary
-This report is aimed at exploring the relationship between healthy male single-fetus birth weight and some explanatory variables based on a given dataset containing information about 1236 healthy male single-fetus births of women enrolled in the Kaiser Foundation Health Plan in the San Francisco/East Bay area between 1960-1967. The entire statistical analysis was performed in the following steps: data cleaning, imputation, pre-fitting data diagnostics, automated model selection, model diagnostics of two candidate models and discussion of the results of the chosen model. Through analysis of our final model, we concluded that the significant explanatory variables for healthy male single-fetus birth weight are: the length of the gestation period, the total number of previous pregnancies, the father's ethnicity, the mother's age, the mother's height and weight, whether the mother smoked during pregnancy and the number of cigarettes smoked per day by the mother when she was smoking.
+This project is aimed at exploring the relationship between healthy male single-fetus birth weight and some explanatory variables based on a given dataset containing information about 1236 healthy male single-fetus births of women enrolled in the Kaiser Foundation Health Plan in the San Francisco/East Bay area between 1960-1967. The entire statistical analysis was performed in the following steps: data cleaning, imputation, pre-fitting data diagnostics, automated model selection, model diagnostics of two candidate models and discussion of the results of the chosen model. Through analysis of our final model, we concluded that the significant explanatory variables for healthy male single-fetus birth weight are: the length of the gestation period, the total number of previous pregnancies, the father's ethnicity, the mother's age, the mother's height and weight, whether the mother smoked during pregnancy and the number of cigarettes smoked per day by the mother when she was smoking.
 
 # Model Selection
 ## Deal with NA's in fht, fwt and income:
-To get an idea of what to expect, we had a look at the summary of the dataset(see \ref{summary}). It was obvious that father's height (*fht*), father's weight (*fwt*) and the family yearly income (*income*) each contain "too many" NA's, meaning that if we include any of these three factors into our models, then it is probable that our models will be highly biased because there are too many unavailable data. Since we do not know why they are unavailable, any model including any of these three factors will not be representative of the *entire population*. Therefore, while we acknowledge that we may be missing out on important covariates by doing this, it is reasonable to remove these three variables from the given dataset (see \ref{NA}). After removing these three variables, we counted how many observations have NA's (see \ref{countNA}). It turned out that there were only 119 observations containing NA's, which account for less than 10% of the entire dataset.
+To begin with, we had a look at the summary of the dataset(see \ref{summary}). It is obvious that father's height (fht), father's weight (fwt) and the family yearly income (income) contain "too many" NA's, meaning that if we include any of these three factors into our models, then it is probable that our models will be highly biased because there are too many unavailable data. Since we do not know why they are unavailable, any model including any of these three factors will not be representative of the *entire population*. Therefore, based on the given dataset, it is reasonable to remove these three variables (see \ref{NA}) and we acknowledge that we may be missing out on important covariates by doing this. After removing these three variables, we counted how many observations have NA's (see \ref{countNA}). It turned out that there were only 119 observations containing NA's, which account for less than 10% of the entire dataset.
 
 ## Creating the New Variable smoke_number:
-We noticed that the three variables indicating 1) whether the mother smoked during pregnancy (*smoke*); 2) time since the mother quit smoking before pregnancy (*time*); 3) number of cigarettes smoked per day by the mother when she was smoking (*number*) are highly correlated with each other and are divided into too many categories for our analysis. Therefore, we decided to create a new variable that could store important information from these three variables so that after we fit the models, we would get more meaningful coefficients. 
+We noticed that the three variables indicating 1) whether the mother smoked during pregnancy (*smoke*); 2) time since the mother quit smoking before pregnancy (*time*); 3) number of cigarettes smoked per day by the mother when she was smoking (*number*) are highly correlated with each other and are divided into too many categories. Therefore, we decided to create a new variable that could store all information from these three variables so that after we fit the models, we will get more meaningful coefficients. 
 
-First, we regrouped the variable *number* into four categories: never smoked, up to half a pack, half to full pack, and more than one pack (see \ref{number}). Then, we regrouped the variable *smoke* in terms of the variable *time* so that the variable *smoke* can store information from both the original *smoke* and *time* (see \ref{smoketime}). After this, we realized that in total there were 21 NA's in smoke and number. Thus, we removed the observations that had NA's in smoke and number (see \ref{removesmokenumber}). Finally, we created a new variable named *smoke_number* which indicates when the mother quit smoking and how many cigarettes the mother smoked when she was smoking (see \ref{smoke_number}), where we created new categories: Never smoked, Smoked more than half and pack but quit before pregnancy, Smoke more than half a pack but quit during pregnancy, Smoked up to half a pack but quit before pregnancy, Still smokes half to full pack, Still smokes more than one pack, and Still smokes up to half a pack. Now that we had our new variable, we threw out the original *smoke*, *time* and *number* (see \ref{smoketimenumber}). 
+First, we regrouped the variable *number* into four categories: never smoked, up to half a pack, half to full pack, and more than one pack (see \ref{number}). Then, we regrouped the variable *smoke* in terms of the variable *time* so that the variable *smoke* can store information from both the original *smoke* and *time* (see \ref{smoketime}). After this, we realized that in total, there are 21 NA's in smoke and number. Thus, we removed the observations that have NA's in smoke and number (see \ref{removesmokenumber}). At the end, we created a new variable named *smoke_number* which indicates when the mother quit smoking and how many cigarettes the mother smoked when she was smoking (see \ref{smoke_number}), where we created new categories: Never smoked, Smoked more than half and pack but quit before pregnancy, Smoke more than half a pack but quit during pregnancy, Smoked up to half a pack but quit before pregnancy, Still smokes half to full pack, Still smokes more than one pack, and Still smokes up to half a pack. And now that we have a new variable, we could throw out the original *smoke*, *time* and *number* (see \ref{smoketimenumber}). 
 
 ## Create the New Variable: BMI
-We realized that Body Mass Index (BMI) combines information about mother's height (*mht*) and mother's weight (*mwt*), and could be a better representation of the mother's health status than just height and weight separately (see \ref{BMI}). Thus, we converted mother's height to metres and mother's weight to kilograms, and we created a new variable *BMI* using the formula $BMI = kg/m^2$. Then we removed the original variables *mht* and *mwt* (see \ref{removemhtmwt}).
+We realized that Body Mass Index (BMI) combines information mother's height(mht) and mother's weight(mwt), and is a better representation of the mother's health status than just height and weight separately (see \ref{BMI}). After this, we removed the original variables mht and mwt (see \ref{removemhtmwt}).
 
-## Imputing the Variables for Mother's Ethnicity (meth) and Father's Ethnicity (feth)
-Upon first glance, we realized that there are subcategories in each variable that account for a very small portion of the entire observations, the subcategories *mixed* and *other* in particular. Therefore, we decided to combine them into a new category *other* for each of meth and feth (see \ref{othermixed}). Then we realized that there were a number of NA's in both *feth* and *meth*. To handle these, we checked and verified that the majority of parents have the same ethnicity, i.e. mother's ethnicity is the same as father's ethnicity (see \ref{countethnicity}). Since there were only a small number of observations with NA's in meth and feth, we found it reasonable to replace the missing values with the corresponding ethnicity of the other parent (see \ref{ethNA}). 
+## Imputing the Variables mother's ethnicity (meth) and father's ethnicity(feth)
+First we realized that there are subcategories in each variable that account for a very small portion of the entire observations, such as the subcategories *mixed* and *other*. Therefore, we decided to combine them to a new variable *other* for each of meth and feth (see \ref{othermixed}). After this, we realized that there are NA's in both feth and meth; besides, we checked that the majority of parents have the same ethnicity (see \ref{countethnicity}). Plus, there is only a small number of observations that have NA's in meth and feth. Hence, for the missing NA's in meth and feth, it is reasonable to replace them with the corresponding ethnicity of the other parent (see \ref{ethNA}). 
 
-## Factor All Categorical Variables
+## Factor all Categorical Variables
 We converted all categorical variables into factors. (see \ref{factor}).
 
-## Deal with Observations that Contain NA's
-At this point, there were still NA's in some observations. As mentioned in Section 1.1, in total there were only 119 observations containing NA's after throwing out the father's height, father's weight, and income variables. Since these observations with NA's account for less than 10% of the dataset, it is acceptable to remove them from the dataset without creating much bias (see \ref{removeNA}). 
+## Deal with observations that contain NA's
+At this point, we noted that there are still NA's in some observations. As mentioned in Section 1.1, totally there were only 119 observations containig NA's. Since they account for less than 10% of the dataset, it is acceptable to remove them from the dataset without creating much biase (see \ref{removeNA}). 
 
 ## Pair Plots
-Once we cleaned the dataset, we did pre-fitting data diagnostics to get a better idea of how the variables interacted with birth weight and each other. We constructed the pair plot of birth weight (*wt*) with other continuous numerical variables (see \ref{pairplot}). We noticed that there might be a quadratic relation between birth weight (*wt*) and the length of the gestation period (*gestation*), which we decided to check in our model selection to follow. 
+Now that we have cleaned the dataset, we did pre-fitting data diagnostics. We constructed the pair plot of birth weight(wt) with other continuous numerical variables (see \ref{pairplot}). We noted that there might be a quadratic relation between birth weight (wt) and the length of the gestation period (gestation), which will be checked during future model selection. 
 
 ```{r, echo = FALSE}
 
@@ -401,11 +400,11 @@ pairs(~ wt + gestation + parity + mage + BMI + fage,
 ```
 
 ## Automated Model Selection
-We constructed our minimal and maximal models for automated model selection (see \ref{maxmin}), where in the maximal model, we removed some of the interaction effects since they did not give meaningful coefficients and produced NA's. We added those main effects back in and then we ran the forward, backward and stepwise selection (see \ref{AMS}). By comparing the models generated by the above selections (see \ref{threemodels} for the models), it turned out that backward and stepwise selection produced the same model; thus, we decided to keep the models generated by *forward* selection and *stepwise* selection for closer inspection. 
+We constructed our minimal and maximal models for automated model selection (see \ref{maxmin}), where in the maximal model, we removed some interaction effect since they do not give meaningful coefficients but we added main effects. Then, we ran the forward, backward and stepwise selection (see \ref{AMS}). By comparing the models generated by the above selections (see \ref{threemodels}), it turned out that backward and stepwise selection produced the same model; thus, we decided to keep the models generated by *forward* selection and *stepwise* selection for closer inspection. 
 
 # Model Diagnostics
 
-## Different Residual Plots, Influences and Leverages for M1 (foward selection) and M2 (stepwise selection)
+## Different Residual Plots, Influences and Leverages for M1(foward selection) and M2(stepwise selection)
 We plotted the ordinary residuals, standardized residuals, PRESS residuals and DIFFITS residuals against the predicted values and against the leverages for both M1 and M2. Then, we plotted the QQ-plot for both M1 and M2.
 ```{r, echo = FALSE}
 # Minimal model
@@ -502,8 +501,7 @@ press1 <- res1/(1-h1)
 
 # DFFITS residuals
 dfts1 <- dffits(M1) # the R way
-# standardize each of these such that they are identical at 
-#  the average leverage value
+# standardize each of these such that they are identical at the average leverage value
 p1 <- length(coef(M1))
 n1 <- nobs(M1)
 hbar1 <- p1/n1 # average leverage
@@ -512,8 +510,7 @@ dfts1 <- dfts1*(1-hbar1)/sqrt(hbar1) # at h1 = hbar1, dfts1 = stan.res1
 
 # plot all residuals
 # against predicted values
-# empty plot to get the axis range
-plot(predict(M1), rep(0, length(predict(M1))), type = "n", 
+plot(predict(M1), rep(0, length(predict(M1))), type = "n", # empty plot to get the axis range
      ylim = range(stan.res1, press1, dfts1), cex.axis = cex,
      xlab = "M1 Predicted Values", ylab = "M1 Residuals")
 # dotted line connecting each observations residuals for better visibility
@@ -551,8 +548,7 @@ press2 <- res2/(1-h2)
 
 # DFFITS residuals
 dfts2 <- dffits(M2) 
-# standardize each of these such that they are identical at 
-#  the average leverage value
+# standardize each of these such that they are identical at the average leverage value
 p2 <- length(coef(M2))
 n2 <- nobs(M2)
 hbar2 <- p2/n2 # average leverage
@@ -562,8 +558,7 @@ dfts2 <- dfts2*(1-hbar2)/sqrt(hbar2) # at h = hbar2, dfts2 = stan.res
 # plot all residuals
 par(mfrow = c(1,2), mar = c(4,4,1,1))
 # against predicted values
-# empty plot to get the axis range
-plot(predict(M2), rep(0, length(predict(M2))), type = "n", 
+plot(predict(M2), rep(0, length(predict(M2))), type = "n", # empty plot to get the axis range
      ylim = range(stan.res2, press2, dfts2), cex.axis = cex,
      xlab = "M2 Predicted Values", ylab = "M2 Residuals")
 # dotted line connecting each observations residuals for better visibility
@@ -633,7 +628,7 @@ legend("topleft", legend = c("High Leverage", "High Influence"), pch = 21,
        pt.bg = c("blue", "red"), cex = cex, pt.cex = cex)
 ```
 ## Cross-validation
-We ran the cross-validation for both M1 (Mfwd) and M2 (Mstep) (see \ref{cross-validation}), produced boxplots for root mean square prediction error (rPMSE), calculated the Akaike Information Criterion (AIC), and produced the boxplots for PRESS statistics (see \ref{AIC}).
+We ran the cross-validation for both M1(Mfwd) and M2(Mstep) (see \ref{cross-validation}), We produced boxplots for root mean square prediction error(rPMSE), and we calculated the Akaike Information Criterion(AIC) and produced the boxplots for PRESS statistics (see \ref{AIC})
 
 ```{r, echo= FALSE}
 # Compare M1 and M2
@@ -707,9 +702,7 @@ boxplot(x = list(abs(press1), abs(press2)), names = Mnames,
         col = c("yellow", "orange"))
 
 ```
-
-Based on the graphs we saw that, for the two candidate models, different residual plots, influence and leverages (Figures 2-6) did not show a big difference. However, it was the boxplots for root mean square prediction error (rPMSE) and the Akaike Information of the two models that showed us M2 (stepwise model) is the better one (see Figures 7 and 8). Hence, we decided to choose the stepwise model, Mstep, as our final model (see below for a condensed summary of this model - see \ref{Mstep} for a more detailed summary).
-
+Based on the graphs, it could be seen that, for the two candidate models, different residual plots, influence and leverages (Figures 2-6) did not show a big difference; however, it was the boxplots for root mean square prediction error(rPMSE) and the Akaike Information of the two models that showed us M2(stepwise model) is the better one (Figure 7 and 8). Hence, we decided to choose the stepwise model, Mstep, as our final model (see \ref{Mstep})
 ```{r, echo = FALSE}
 estimates <- summary(M2)$coefficients[,1]
 sd.errors <- summary(M2)$coefficients[,2]
@@ -725,7 +718,7 @@ for (ii in 1:n) {
 result <- matrix(result[2:length(result)], nrow = n, byrow = TRUE)
 colnames(result) <- c("parameter estimates", "standard errors", "t-value", "Pr(>|t|)")
 rownames(result) <- c(1:18)
-signif(result,3)
+result
 names(coef(M2))
 ```
 
@@ -739,17 +732,17 @@ The most significant factors influencing birth weight of healthy single fetus ma
 ### Coefficients with High p-values:
 There are some coefficients with *high p-values* retained in our model, such as fethMexican, fethOther and Smoked up to half a pack but quit before pregnancy. 
 
-For the coefficients related to ethnicities (fethMexican and fethOther), note that the majority of observations in the given dataset have *Caucasian* ethnicity. Thus, other ethnicities only account for a small portion of the entire dataset. Even if in reality these coefficients are significant to the birth weight of a single-fetus male, they might not be observed in this given dataset. For this reason, we decided to retain them in our model. 
+For the coefficients related to ethnicities (fethMexican and fethOther), note that the majority observations in the given dataset have ethnicity *Caucasian*, thus, other ethnicities only account for a small portion of the entire dataset. So, even if in reality these coefficients are significant to the birth weight of a single-fetus male, they might not be revealed by this given dataset. Hence, we decided to retain them in our model. 
 
-For the coefficient about smoking (Smoked up to half a pack but quit *before pregnancy*), note that all the other coefficients about smoking are shown to be significant in our model, and they are all about *smoking during pregnancy*. We decided to retain the coefficient Smoked up to half a pack but quit before pregnancy in our model so that it shows a *contrast* with other coefficients about smoking, and it would be more obvious to see that *smoking during pregnancy* has a significant influence on the birth weight of a single-fetus male. 
+For the coefficient about smoking (Smoked up to half a pack but quit *before pregnancy*), note that all the other coefficients about smoking are shown to be significant in our model, and they are all about *smoking during pregnancy*. We decided to retain the coefficient Smoked up to half a pack but quit before pregnancy in our model so that it shows a *contrast* with other coefficients about smoking, and it would be more obvious to see that *smoking during pregnancy* has a really significant influence on the birth weight of a single-fetus male. 
 
 ## Recommendation
-Our results show that, compared to the birth weight of a single-fetus male whose mother never smoked, the expected birth weight of a single-fetus male whose mother smoked but quit during pregnancy or smoked throughout pregnancy is lower. Thus, we recommend that mothers should refrain from smoking during pregnancy and maintain a normal or higher than normal BMI (i.e. BMI above 18.5) to reduce the likelihood of low birth weight if they are expecting to give birth to a healthy single-fetus male.
+Based on our result, it is shown that, compared to the birth weight of a single-fetus male whose mother never smoked, the expected birth weight of a single-fetus male whose mother smoked but quit during pregnancy or smoked throughout pregnancy is less. Thus, we recommend that mothers should refrain from smoking during pregnancy and maintain a normal or higher than normal BMI (i.e. BMI above 18.5) to reduce the likelihood of low birth weight if they are expecting to give birth to a healthy single-fetus male.
 
-## Deficiencies
-We acknowledge that our methods of handling NA's may have biased and/or affected the generalizability of our final model. At the beginning of our analysis, we threw out three columns that contained what we considered to be too many NA's (i.e. almost half the observations had NA's). Next, we threw out close to 10% of all observations because they contained NA's in columns we could not confidently impute. After this, we imputed missing mother's ethnicity (meth) and father's ethnicity (feth) by matching misssing ethnicity in one parent with the one of the other parent. Every step above was well justified, but there still exists the possibility that our model may be biased.
+## Deficiency
+At the beginning, we threw out three columns containing too many NA's; next, we threw out close to 10% of the entire observations which contain NA's in any columns. After this, we imputed missing mother's ethnicity (meth) and father's ethnicity (feth) by matching misssing ethnicity in one parent with the one of the other parent. Every step above was well justified, but there is still possibility that our model could be biased. 
 
-Another deficiency worth mentioning is that our model is based on this given dataset which dates back to 1960s, and "an algorithm is only as good as its inputs". Even though our model reveals all significant factors, when given another dataset obtained in the 21st century, we might be able to obtain a different model with more or less significant factors.
+Another deficiency worth mentioning is that our model is based on this given dataset which dates back to 1960s, and "an algorithm is only as good as its inputs". Even though our model reveals all significant factors, when given another dataset obtained in the 21st century, we might be able to obtain a different model with more or less significant factors. 
 
 
 \clearpage
@@ -794,8 +787,7 @@ total_NA_rows
 
 num2 <- birth$number
 # new categories for variable number
-numnames <- c("never smoked", "up to half a pack", 
-              "half to full pack", "more than one pack")
+numnames <- c("never smoked", "up to half a pack", "half to full pack", "more than one pack")
 
 for(ii in 0:9) {
   if(ii==0) {
@@ -872,8 +864,7 @@ birth <- birth[-remove_smoke,]
 ## Create the new variable smoke_number {#smoke_number}
 ```{r}
 # create a new variable to combine smoke and number
-# note that nobody is in the category "Smoked up to half a pack but 
-#  quit during pregnancy"
+# note that nobody is in the category "Smoked up to half a pack but quit during pregnancy"
 
 smoke_number <- birth$smoke
 for (ii in 1:(length(birth$smoke))) {
@@ -918,8 +909,7 @@ birth <- birth[,-c(13, 14, 15)]
 ## BMI {#BMI}
 ```{r}
 # Combine mht and mwt to create a new variable BMI
-# BMI is called Body Mass Index, which is calculated by 
-#  weight in kg / height^2 in m
+# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
 # Convert mht and mwt to standard metric
 lbs_to_kg <- 0.453592
 birth$mwt <- lbs_to_kg * birth$mwt
@@ -1012,9 +1002,7 @@ birth$meth <- meth2 # replace in dataset
 # convert med to categorical variables
 med2 <- birth$med
 # "levels" of variable med
-mednames <- c("elementary school", "middle school", "high school", 
-              "high school + trade", "high school + some college", 
-              "college grad", "trade school", "high school unclear")
+mednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
 med2 <- mednames[birth$med+1]
 med2 <- factor(med2, levels = mednames) # order levels based on mednames
 levels(med2)
@@ -1046,9 +1034,7 @@ birth$feth <- feth2 # replace in dataset
 # convert fed to categorical variables
 fed2 <- birth$fed
 # "levels" of variable fed
-fednames <- c("elementary school", "middle school", "high school",
-              "high school + trade", "high school + some college",
-              "college grad", "trade school", "high school unclear")
+fednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
 fed2 <- fednames[birth$fed+1]
 fed2 <- factor(fed2, levels = fednames) # order levels based on fednames
 levels(fed2)
@@ -1156,8 +1142,7 @@ for (ii in 1:length(birth$BMI)) {
 }
 ind_BMI <- ind_BMI[2:length(ind_BMI)]
 
-missing <- c(ind_gestation, ind_mage, ind_BMI, ind_marital, ind_fage, 
-             ind_fed, ind_med)
+missing <- c(ind_gestation, ind_mage, ind_BMI, ind_marital, ind_fage, ind_fed, ind_med)
 missing
 
 # remove missing observations
@@ -1235,7 +1220,7 @@ Mback$call
 Mstep$call
 ```
 
-## M1 and M2 Ordinary Residuals vs. Predicted Values
+## M1 and M2 Ordinary Residuals vs. Prediected Values
 ```{r, ref.label = "ordinary residuals M1 and M2", eval = FALSE}
 ```
 
