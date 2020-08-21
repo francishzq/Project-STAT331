@@ -3,14 +3,12 @@ title: "STAT 331 Project"
 author: "Francis Han; Catherine Wang"
 date: "`r format(Sys.Date(), format = '%B %d, %Y')`"
 fontsize: 12pt
-link-citations: yes
-linkcolor: blue
 output: 
    pdf_document:
      number_sections: TRUE
 ---
 
-\newcommand{\var}{\mathrm{var}}
+
 
 # Summary
 This report is aimed at exploring the relationship between healthy male single-fetus birth weight and some explanatory variables based on a given dataset containing information about 1236 healthy male single-fetus births of women enrolled in the Kaiser Foundation Health Plan in the San Francisco/East Bay area between 1960-1967. The entire statistical analysis was performed in the following steps: data cleaning, imputation, pre-fitting data diagnostics, automated model selection, model diagnostics of two candidate models and discussion of the results of the chosen model. Through analysis of our final model, we concluded that the significant explanatory variables for healthy male single-fetus birth weight are: the length of the gestation period, the total number of previous pregnancies, the father's ethnicity, the mother's age, the mother's height and weight, whether the mother smoked during pregnancy and the number of cigarettes smoked per day by the mother when she was smoking.
