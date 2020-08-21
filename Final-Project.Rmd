@@ -3,6 +3,7 @@ title: "STAT 331 Final Project"
 author: "Francis Z. Han; Catherine Wang"
 date: "03/12/2018"
 fontsize: 12pt
+linkcolor: blue
 output: 
    pdf_document:
      number_sections: TRUE
