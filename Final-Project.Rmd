@@ -754,8 +754,6 @@ Another deficiency worth mentioning is that our model is based on this given dat
 
 ## Summary of the dataset {#summary}
 ```{r}
-getwd() # make sure that the file is in the working directory
-
 # load the data as a data.frame
 birth <- read.csv(file = "chds_births.csv")
 
@@ -788,7 +786,10 @@ total_NA_rows
 
 num2 <- birth$number
 # new categories for variable number
-numnames <- c("never smoked", "up to half a pack", "half to full pack", "more than one pack")
+numnames <- c("never smoked", 
+              "up to half a pack", 
+              "half to full pack", 
+              "more than one pack")
 
 for(ii in 0:9) {
   if(ii==0) {
@@ -865,7 +866,8 @@ birth <- birth[-remove_smoke,]
 ## Create the new variable smoke_number {#smoke_number}
 ```{r}
 # create a new variable to combine smoke and number
-# note that nobody is in the category "Smoked up to half a pack but quit during pregnancy"
+# note that nobody is in the category 
+# "Smoked up to half a pack but quit during pregnancy"
 
 smoke_number <- birth$smoke
 for (ii in 1:(length(birth$smoke))) {
@@ -910,7 +912,8 @@ birth <- birth[,-c(13, 14, 15)]
 ## BMI {#BMI}
 ```{r}
 # Combine mht and mwt to create a new variable BMI
-# BMI is called Body Mass Index, which is calculated by weight in kg / height^2 in m
+# BMI is called Body Mass Index, 
+# which is calculated by weight in kg / height^2 in m
 # Convert mht and mwt to standard metric
 lbs_to_kg <- 0.453592
 birth$mwt <- lbs_to_kg * birth$mwt
@@ -982,7 +985,11 @@ count.eth
 meth2 <- birth$meth
 length(meth2)
 # "levels" of variable meth
-methnames <- c("Caucasian","Mexican", "African-American","Asian", "Other")
+methnames <- c("Caucasian",
+               "Mexican", 
+               "African-American",
+               "Asian", 
+               "Other")
 # assign "Caucasian" level to values less than or equal to 5
 # otherwise assign levels based on order in methnames vector
 for(ii in 0:9) {
@@ -1003,7 +1010,9 @@ birth$meth <- meth2 # replace in dataset
 # convert med to categorical variables
 med2 <- birth$med
 # "levels" of variable med
-mednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+mednames <- c("elementary school", "middle school", "high school", 
+              "high school + trade", "high school + some college", 
+              "college grad", "trade school", "high school unclear")
 med2 <- mednames[birth$med+1]
 med2 <- factor(med2, levels = mednames) # order levels based on mednames
 levels(med2)
@@ -1015,7 +1024,11 @@ birth$med <- med2 # replace in dataset
 # convert feth to categorical variables
 feth2 <- birth$feth
 # "levels" of variable feth
-fethnames <- c("Caucasian","Mexican", "African-American","Asian", "Other")
+fethnames <- c("Caucasian",
+               "Mexican", 
+               "African-American",
+               "Asian", 
+               "Other")
 # assign "Caucasian" level to values less than or equal to 5
 # otherwise assign levels based on order in fethnames vector
 for(ii in 0:9) {
@@ -1035,7 +1048,9 @@ birth$feth <- feth2 # replace in dataset
 # convert fed to categorical variables
 fed2 <- birth$fed
 # "levels" of variable fed
-fednames <- c("elementary school", "middle school", "high school", "high school + trade", "high school + some college", "college grad", "trade school", "high school unclear")
+fednames <- c("elementary school", "middle school", "high school", 
+              "high school + trade", "high school + some college", 
+              "college grad", "trade school", "high school unclear")
 fed2 <- fednames[birth$fed+1]
 fed2 <- factor(fed2, levels = fednames) # order levels based on fednames
 levels(fed2)
@@ -1143,7 +1158,8 @@ for (ii in 1:length(birth$BMI)) {
 }
 ind_BMI <- ind_BMI[2:length(ind_BMI)]
 
-missing <- c(ind_gestation, ind_mage, ind_BMI, ind_marital, ind_fage, ind_fed, ind_med)
+missing <- c(ind_gestation, ind_mage, ind_BMI, 
+             ind_marital, ind_fage, ind_fed, ind_med)
 missing
 
 # remove missing observations
